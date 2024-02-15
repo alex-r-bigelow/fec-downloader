@@ -1,7 +1,7 @@
 #!/usr/local/bin/bash
 
 cd ./output
-rm -rf ./*
+rm *.csv
 
 set -e
 
@@ -37,15 +37,17 @@ do
   for file in "${!files[@]}"
   do
     echo "Downloading, decompressing, and appending ${files[$file]} data for 20$year"
-    curl -L "https://www.fec.gov/files/bulk-downloads/20$year/$file$year.zip" > $file$year.zip
+    if ! [ -f $file$year.zip ]
+    then
+      curl -L "https://www.fec.gov/files/bulk-downloads/20$year/$file$year.zip" > $file$year.zip
+    fi
     unzip -o $file$year.zip
-    rm $file$year.zip
     if [[ ${decompressedFilenames[$file]} ]]
     then
-      cat ${decompressedFilenames[$file]} | sed -E 's/"/""/g' | sed -E "s/$/|20$year/g" >> ${files[$file]}.csv
+      cat ${decompressedFilenames[$file]} | sed -E 's/"/""/g' | sed -E 's/^/"/g' | sed -E 's/\|/"|"/g' | sed -E "s/$/\"|20$year/g" >> ${files[$file]}.csv
       rm ${decompressedFilenames[$file]}
     else
-      cat $file$year.txt | sed -E 's/"/""/g' | sed -E "s/$/|20$year/g" >> ${files[$file]}.csv
+      cat $file$year.txt | sed -E 's/"/""/g' | sed -E 's/^/"/g' | sed -E 's/\|/"|"/g' | sed -E "s/$/\"|20$year/g" >> ${files[$file]}.csv
       rm $file$year.txt
     fi
     if [[ ${extraFilesToDelete[$file]} ]]
