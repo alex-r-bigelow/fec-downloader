@@ -1,4 +1,4 @@
-#!/usr/local/bin/bash
+#! /usr/bin/env bash
 
 cd ./output
 rm *.csv
@@ -7,6 +7,7 @@ set -e
 
 # edit this line to pick different two-year periods;
 # FCC labels files by the ending year, e.g. "20" will download data from 2019-2020
+# declare -a years=("24")
 declare -a years=("04" "06" "08" "10" "12" "14" "16" "18" "20" "22")
 
 # All files go back as far as 2003-2004, a subset of the data goes back to 1979-1980
@@ -15,6 +16,7 @@ declare -a years=("04" "06" "08" "10" "12" "14" "16" "18" "20" "22")
 
 # edit this line to add/remove specific tables
 declare -A files=(["cn"]="candidates" ["ccl"]="candidate_committee" ["cm"]="committees" ["webk"]="pac_summary" ["webl"]="campaigns" ["weball"]="candidate_summary")
+# declare -A files=(["oppexp"]="operating_expenditures" ["pas2"]="committee_candidate_expenditures" ["oth"]="inter_committee_transactions" ["indiv"]="individual_contributions" ["cn"]="candidates" ["ccl"]="candidate_committee" ["cm"]="committees" ["webk"]="pac_summary" ["webl"]="campaigns" ["weball"]="candidate_summary")
 
 # (currently skipping, because they're big files):
 # ["indiv"]="individual_contributions"
